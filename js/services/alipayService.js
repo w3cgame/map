@@ -55,7 +55,7 @@ function generatePaymentQRCode(plan, callback) {
     }
 
     // 调用后端API获取支付二维码
-    fetch('/api/alipay_precreate.php', {
+    fetch('api/alipay_precreate.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -115,7 +115,7 @@ function padZero(num) {
  */
 function queryOrderStatus(outTradeNo, callback) {
     // 调用后端API查询订单状态
-    fetch('/api/alipay_query.php', {
+    fetch('api/alipay_query.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
