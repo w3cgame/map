@@ -62,8 +62,15 @@ function generatePaymentQRCode(plan, callback) {
         },
         body: JSON.stringify({ plan })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log('Response received:', response);
+        return response.json();
+    })
     .then(data => {
+        console.log('Parsed data:', data);
         if (data.success) {
             callback(data);
         } else {
@@ -71,7 +78,8 @@ function generatePaymentQRCode(plan, callback) {
         }
     })
     .catch(error => {
-        callback({ error: '网络错误: ' + error.message });
+        console.error('Payment QR code generation error:', error);
+        callback({ error: '生成支付二维码失败: ' + error.message });
     });
 }
 
@@ -114,8 +122,15 @@ function queryOrderStatus(outTradeNo, callback) {
         },
         body: JSON.stringify({ outTradeNo })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        console.log('Order query response received:', response);
+        return response.json();
+    })
     .then(data => {
+        console.log('Order query data:', data);
         if (data.success) {
             callback(data);
         } else {
@@ -123,7 +138,8 @@ function queryOrderStatus(outTradeNo, callback) {
         }
     })
     .catch(error => {
-        callback({ error: '网络错误: ' + error.message });
+        console.error('Order status query error:', error);
+        callback({ error: '查询订单失败: ' + error.message });
     });
 }
 

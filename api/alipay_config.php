@@ -28,7 +28,7 @@ return [
     'charset' => 'UTF-8',
     
     // 日志路径
-    'log_path' => '../logs/',
+    'log_path' => __DIR__ . '/../logs/',
     
     // 价格配置（以分为单位）
     'price_config' => [

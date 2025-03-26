@@ -81,11 +81,39 @@ try {
         'timeout_express' => '15m',
         'product_code' => 'FACE_TO_FACE_PAYMENT',
     ];
+    
+    // 记录请求参数
+    logError('alipay_precreate_request', json_encode($bizContent));
+    
     $request->setBizContent(json_encode($bizContent));
     
     // 执行请求
     $result = $aop->execute($request);
+    
+    // 记录响应结果
+    logError('alipay_precreate_response', json_encode($result));
+    
+    // 检查是否有结果返回
+    if(!$result) {
+        echo json_encode([
+            'success' => false,
+            'error' => '支付宝接口返回空结果'
+        ]);
+        exit;
+    }
+    
     $responseNode = str_replace(".", "_", $request->getApiMethodName()) . "_response";
+    
+    // 检查响应节点是否存在
+    if(!isset($result->$responseNode)) {
+        echo json_encode([
+            'success' => false,
+            'error' => '支付宝接口响应格式异常',
+            'result' => json_encode($result)
+        ]);
+        exit;
+    }
+    
     $resultCode = $result->$responseNode->code;
     
     // 记录订单信息到数据库，方便后续查询
@@ -102,16 +130,23 @@ try {
             'outTradeNo' => $out_trade_no
         ]);
     } else {
+        // 获取详细的错误信息
+        $subCode = isset($result->$responseNode->sub_code) ? $result->$responseNode->sub_code : 'unknown';
+        $subMsg = isset($result->$responseNode->sub_msg) ? $result->$responseNode->sub_msg : '未知错误';
+        
+        // 记录错误
+        logError('alipay_precreate_error', "错误码: $subCode, 错误信息: $subMsg");
+        
         // 返回失败结果
         echo json_encode([
             'success' => false,
-            'error' => '创建订单失败: ' . $result->$responseNode->sub_msg,
-            'errorCode' => $result->$responseNode->sub_code
+            'error' => '创建订单失败: ' . $subMsg,
+            'errorCode' => $subCode
         ]);
     }
 } catch (Exception $e) {
     // 记录错误日志
-    logError('alipay_precreate_error', $e->getMessage());
+    logError('alipay_precreate_exception', $e->getMessage() . "\n" . $e->getTraceAsString());
     
     // 返回错误信息
     echo json_encode([
@@ -177,11 +212,17 @@ function logError($type, $message) {
     // 确保日志目录存在
     $logDir = $config['log_path'];
     if (!is_dir($logDir)) {
-        mkdir($logDir, 0755, true);
+        if (!mkdir($logDir, 0755, true)) {
+            // 如果创建目录失败，尝试写入到系统临时目录
+            $logDir = sys_get_temp_dir() . '/';
+        }
     }
     
     // 写入日志
     $logFile = $logDir . 'error.log';
     $logMessage = '[' . date('Y-m-d H:i:s') . '] [' . $type . '] ' . $message . PHP_EOL;
     file_put_contents($logFile, $logMessage, FILE_APPEND);
+    
+    // 同时输出到PHP错误日志
+    error_log($logMessage);
 } 
