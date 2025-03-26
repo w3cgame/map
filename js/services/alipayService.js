@@ -57,13 +57,12 @@ function generatePaymentQRCode(plan, callback) {
         return;
     }
 
-    // 调用后端API获取支付二维码
-    fetch(`${API_BASE_URL}/api/alipay_precreate.php`, {
-        method: 'POST',
+    // 修改为使用GET请求，以解决某些服务器环境的兼容性问题
+    fetch(`${API_BASE_URL}/api/alipay_precreate.php?plan=${plan}`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ plan })
+        }
     })
     .then(response => {
         if (!response.ok) {
@@ -82,7 +81,7 @@ function generatePaymentQRCode(plan, callback) {
     })
     .catch(error => {
         console.error('Payment QR code generation error:', error);
-        console.error('API URL used:', `${API_BASE_URL}/api/alipay_precreate.php`);
+        console.error('API URL used:', `${API_BASE_URL}/api/alipay_precreate.php?plan=${plan}`);
         callback({ error: '生成支付二维码失败: ' + error.message });
     });
 }
@@ -118,13 +117,12 @@ function padZero(num) {
  * @param {Function} callback - 回调函数
  */
 function queryOrderStatus(outTradeNo, callback) {
-    // 调用后端API查询订单状态
-    fetch(`${API_BASE_URL}/api/alipay_query.php`, {
-        method: 'POST',
+    // 修改为使用GET请求，以解决某些服务器环境的兼容性问题
+    fetch(`${API_BASE_URL}/api/alipay_query.php?outTradeNo=${outTradeNo}`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ outTradeNo })
+        }
     })
     .then(response => {
         if (!response.ok) {
@@ -143,7 +141,7 @@ function queryOrderStatus(outTradeNo, callback) {
     })
     .catch(error => {
         console.error('Order status query error:', error);
-        console.error('API URL used:', `${API_BASE_URL}/api/alipay_query.php`);
+        console.error('API URL used:', `${API_BASE_URL}/api/alipay_query.php?outTradeNo=${outTradeNo}`);
         callback({ error: '查询订单失败: ' + error.message });
     });
 }

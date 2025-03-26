@@ -10,7 +10,8 @@ header('Content-Type: application/json');
 // 允许跨域请求
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
+header('Access-Control-Max-Age: 86400'); // 缓存预检请求结果1天
 
 // 如果是预检请求，直接返回200
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
@@ -21,14 +22,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // 载入配置
 $config = require_once 'alipay_config.php';
 
-// 检查请求方法
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success' => false, 'error' => '请使用POST方法请求']);
+// 检查请求方法 - 接受POST或GET
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET') {
+    echo json_encode(['success' => false, 'error' => '请使用POST或GET方法请求', 'method' => $_SERVER['REQUEST_METHOD']]);
     exit;
 }
 
-// 获取POST数据
-$postData = json_decode(file_get_contents('php://input'), true);
+// 获取数据 - 根据请求方法选择不同的获取方式
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = file_get_contents('php://input');
+    $postData = json_decode($input, true);
+    // 记录原始输入用于调试
+    error_log('POST数据: ' . $input);
+} else {
+    // GET方法
+    $postData = $_GET;
+    error_log('GET数据: ' . json_encode($_GET));
+}
+
 if (!$postData) {
     echo json_encode(['success' => false, 'error' => '无效的请求数据']);
     exit;
