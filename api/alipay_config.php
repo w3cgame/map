@@ -13,10 +13,10 @@ return [
     'alipay_public_key' => 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnA6yqE7gj8MRY6k645J5ayXvkzXBwxgMwtXnvT0Ndgh+wnBWOLjcl5ExGFPcxVVDlvzM55OICwea7JSWPmwglqYg5G8MyS9qYFL4/GNbxkWhkFC0eTagtSRERTGrvatecB2W6ZeujXgGdRp3zCyaDq2jwgL9fualv+XwTcea/Q/DimN1FOqqTEx5D2L9yXnz9EXvzehe12WqCoKk65vSZQQ8zahVQyr13cgImCjMSIclR+qQ2HGpskZKyjhdYAbRFhsVHI5jZdmrrp8nHKbyEAo1AfxsnDcH2bgdNercZyp2qC2l8tDt3ZHru5YGG6VXzgDLvgDlQ9+n9qp47jSV9wIDAQAB',
     
     // 服务器异步通知页面路径，必须是完整的url，不能只写路径
-    'notify_url' => 'https://vvchange.top/api/alipay_notify.php',
+    'notify_url' => 'https://您的实际域名/api/alipay_notify.php',
     
     // 页面跳转同步通知页面路径，必须是完整的url，不能只写路径
-    'return_url' => 'https://vvchange.top/index.html',
+    'return_url' => 'https://您的实际域名/index.html',
     
     // 签名方式
     'sign_type' => 'RSA2',

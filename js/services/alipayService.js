@@ -3,6 +3,9 @@
  * 集成支付宝当面付API，处理支付流程
  */
 
+// API基础URL，根据不同环境配置
+const API_BASE_URL = '';  // 如果是根目录，留空；如果有子目录，可以设置为 '/子目录名'
+
 // 支付宝接口配置
 const ALIPAY_CONFIG = {
     APPID: '2021003128637838',
@@ -55,7 +58,7 @@ function generatePaymentQRCode(plan, callback) {
     }
 
     // 调用后端API获取支付二维码
-    fetch('api/alipay_precreate.php', {
+    fetch(`${API_BASE_URL}/api/alipay_precreate.php`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -79,6 +82,7 @@ function generatePaymentQRCode(plan, callback) {
     })
     .catch(error => {
         console.error('Payment QR code generation error:', error);
+        console.error('API URL used:', `${API_BASE_URL}/api/alipay_precreate.php`);
         callback({ error: '生成支付二维码失败: ' + error.message });
     });
 }
@@ -115,7 +119,7 @@ function padZero(num) {
  */
 function queryOrderStatus(outTradeNo, callback) {
     // 调用后端API查询订单状态
-    fetch('api/alipay_query.php', {
+    fetch(`${API_BASE_URL}/api/alipay_query.php`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -139,6 +143,7 @@ function queryOrderStatus(outTradeNo, callback) {
     })
     .catch(error => {
         console.error('Order status query error:', error);
+        console.error('API URL used:', `${API_BASE_URL}/api/alipay_query.php`);
         callback({ error: '查询订单失败: ' + error.message });
     });
 }
