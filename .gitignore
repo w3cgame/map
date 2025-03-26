@@ -1,0 +1,13 @@
+# 数据库文件
+database/*.db
+
+# 日志文件
+logs/*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# PHP依赖包可能会很大，通常不包含在仓库中
+vendor/*
+!vendor/alipay 

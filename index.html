@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="星链Starlink手机号码定位服务，提供全球范围内的手机号码精准定位">
+    <meta name="theme-color" content="#4a6fa5">
+    <title>星链Starlink - 手机号码定位器</title>
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- 引入支付相关 CSS -->
+    <link rel="stylesheet" href="css/payment.css">
+    <!-- 引入 Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous">
+    <!-- 可选: 添加网站图标 -->
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <!-- 添加苹果设备图标 -->
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-location-dot"></i>星链Starlink - 手机号码定位器</h1>
+        <div class="header-description">
+            <span><i class="fas fa-globe"></i> 全球20+国家定位</span>
+            <span><i class="fas fa-satellite"></i> 星链Starlink技术</span>
+            <span><i class="fas fa-bullseye"></i> 100%精准度(来自谷歌地图)</span>
+            <span><i class="fas fa-mobile-alt"></i> 只需要手机号码即可</span>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="sidebar">
+            <div class="form-title"><i class="fas fa-satellite-dish"></i>开始精准定位</div>
+            <form id="phoneForm">
+                <div class="form-group">
+                    <label for="country"><i class="fas fa-globe"></i> 选择国家/地区</label>
+                    <select id="country" class="country-code">
+                        <option value="+86" selected>中国 +86</option>
+                        <option value="+1">美国 +1</option>
+                        <option value="+44">英国 +44</option>
+                        <option value="+81">日本 +81</option>
+                        <option value="+82">韩国 +82</option>
+                        <option value="+61">澳大利亚 +61</option>
+                        <option value="+49">德国 +49</option>
+                        <option value="+33">法国 +33</option>
+                        <option value="+39">意大利 +39</option>
+                        <option value="+7">俄罗斯 +7</option>
+                        <option value="+65">新加坡 +65</option>
+                        <option value="+91">印度 +91</option>
+                        <option value="+55">巴西 +55</option>
+                        <option value="+52">墨西哥 +52</option>
+                        <option value="+966">沙特阿拉伯 +966</option>
+                        <option value="+971">阿联酋 +971</option>
+                        <option value="+90">土耳其 +90</option>
+                        <option value="+234">尼日利亚 +234</option>
+                        <option value="+27">南非 +27</option>
+                        <option value="+20">埃及 +20</option>
+                        <option value="+31">荷兰 +31</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-mobile-alt"></i> 手机号码</label>
+                    <div class="phone-input">
+                        <i class="fas fa-phone"></i>
+                        <input type="text" id="phone" class="phone-number" placeholder="输入11位手机号码" required pattern="[0-9]{11}" title="请输入有效的手机号码" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="activationCode"><i class="fas fa-key"></i> 激活码</label>
+                    <div class="activation-input">
+                        <i class="fas fa-lock"></i>
+                        <input type="text" id="activationCode" class="activation-code" placeholder="请输入激活码" />
+                    </div>
+                    <div class="activation-error" id="activationError"></div>
+                </div>
+                <button type="submit" class="submit-btn"><i class="fas fa-satellite"></i>开始追踪</button>
+                <div id="statusMessage" class="status-message"></div>
+            </form>
+        </div>
+        <div class="map-container">
+            <div class="map-frame">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d59233174.43603217!2d95.67269557536404!3d28.38363882744979!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1679831920096!5m2!1sen!2sus"
+                    width="100%"
+                    height="100%"
+                    frameborder="0"
+                    scrolling="no"
+                    allowfullscreen=""
+                    loading="lazy"
+                    sandbox="allow-scripts allow-same-origin allow-popups"
+                    title="Google Maps">
+                </iframe>
+                <div class="map-overlay"></div>
+                <div id="locationMarker" class="location-marker"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 自定义弹窗和遮罩层 -->
+    <div id="overlay" class="overlay">
+        <div class="custom-popup">
+            <div class="popup-header">
+                <i class="fas fa-exclamation-circle"></i>
+                <h3>需要激活码</h3>
+                <button id="closePopup" class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="popup-content">
+                <p>需要输入正确的激活码才能继续定位!</p>
+                <div class="activation-input popup-input">
+                    <i class="fas fa-key"></i>
+                    <input type="text" id="popupActivationCode" placeholder="请输入正确的激活码" />
+                </div>
+                <div class="btn-container">
+                    <div class="main-buttons">
+                        <button id="confirmActivation" class="popup-btn confirm-btn"><i class="fas fa-check"></i> 确认</button>
+                        <button id="cancelActivation" class="popup-btn cancel-btn"><i class="fas fa-times"></i> 取消</button>
+                    </div>
+                    <button id="buyActivation" class="popup-btn buy-btn"><i class="fas fa-shopping-cart"></i> 购买激活码</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 购买激活码弹窗 -->
+    <div id="purchaseOverlay" class="overlay">
+        <div class="custom-popup purchase-popup">
+            <div class="popup-header">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>购买激活码</h3>
+                <button id="closePurchase" class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="popup-content">
+                <p>请选择激活码套餐:</p>
+                <div class="purchase-options">
+                    <div class="purchase-option">
+                        <h4>30天有效期</h4>
+                        <p class="price">¥58</p>
+                        <p class="description">全球20+国家追踪服务，激活码有效期30天(可享受无限次定位)</p>
+                        <button class="popup-btn purchase-btn" data-plan="monthly"><i class="fas fa-check"></i> 购买</button>
+                    </div>
+                    <div class="purchase-option highlight">
+                        <div class="popular-tag">热门</div>
+                        <h4>90天有效期</h4>
+                        <p class="price">¥98</p>
+                        <p class="description">全球20+国家追踪服务，激活码有效期90天(可享受无限次定位)</p>
+                        <button class="popup-btn purchase-btn" data-plan="quarterly"><i class="fas fa-check"></i> 购买</button>
+                    </div>
+                    <div class="purchase-option">
+                        <h4>365天有效期</h4>
+                        <p class="price">¥298</p>
+                        <p class="description">全球20+国家追踪服务，激活码有效期365天(可享受无限次定位)</p>
+                        <button class="popup-btn purchase-btn" data-plan="yearly"><i class="fas fa-check"></i> 购买</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入外部 JavaScript 文件 -->
+    <script src="js/app.js"></script>
+    <!-- 引入支付相关JS文件 -->
+    <script src="js/services/alipayService.js"></script>
+    <script src="js/services/paymentUI.js"></script>
+</body>
+</html> 
