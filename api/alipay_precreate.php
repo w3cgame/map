@@ -2,6 +2,7 @@
 /**
  * 支付宝当面付预创建订单接口
  * 用于生成支付二维码
+ * Vercel兼容版本
  */
 
 // 设置响应头为JSON格式
@@ -13,8 +14,8 @@ header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-Requested-With');
 header('Access-Control-Max-Age: 86400'); // 缓存预检请求结果1天
 
-// 如果是预检请求，直接返回200
-if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+// Vercel特殊处理：如果是预检请求或不支持的方法，返回成功
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS' || $_SERVER['REQUEST_METHOD'] == 'HEAD') {
     http_response_code(200);
     exit;
 }
@@ -22,23 +23,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 // 载入配置
 $config = require_once 'alipay_config.php';
 
-// 检查请求方法 - 接受POST或GET（在部署环境中GET可能更容易通过）
-if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET') {
-    echo json_encode(['success' => false, 'error' => '请使用POST或GET方法请求', 'method' => $_SERVER['REQUEST_METHOD']]);
-    exit;
-}
-
-// 获取数据 - 根据请求方法选择不同的获取方式
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// 获取数据 - 优先从查询参数中获取
+if (isset($_GET['plan'])) {
+    $postData = $_GET;
+    logError('request_data', 'GET查询参数: ' . json_encode($_GET));
+} else {
+    // 尝试从POST请求体中获取
     $input = file_get_contents('php://input');
     $postData = json_decode($input, true);
+    
     // 记录原始输入用于调试
     logError('request_data', 'POST数据: ' . $input);
-} else {
-    // GET方法
-    $postData = $_GET;
-    logError('request_data', 'GET数据: ' . json_encode($_GET));
+    
+    // 如果POST解析失败，尝试直接从$_POST获取
+    if (!$postData && !empty($_POST)) {
+        $postData = $_POST;
+        logError('request_data', 'Form POST数据: ' . json_encode($_POST));
+    }
 }
+
+// 记录请求方法和完整请求
+logError('request_debug', 'Method: ' . $_SERVER['REQUEST_METHOD'] . ', Headers: ' . json_encode(getallheaders()));
 
 if (!$postData) {
     echo json_encode(['success' => false, 'error' => '无效的请求数据']);
@@ -236,4 +241,18 @@ function logError($type, $message) {
     
     // 同时输出到PHP错误日志
     error_log($logMessage);
+}
+
+/**
+ * 获取所有HTTP请求头
+ * 兼容不同PHP环境
+ */
+function getallheaders() {
+    $headers = [];
+    foreach ($_SERVER as $name => $value) {
+        if (substr($name, 0, 5) == 'HTTP_') {
+            $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+        }
+    }
+    return $headers;
 } 
