@@ -9,7 +9,8 @@
     <title>星链Starlink - 手机号码定位器</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/payment.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/brands.min.css" crossorigin="anonymous">
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 </head>
@@ -57,7 +58,7 @@
                     <label for="phone"><i class="fas fa-mobile-alt"></i> 手机号码</label>
                     <div class="phone-input">
                         <i class="fas fa-phone"></i>
-                        <input type="text" id="phone" class="phone-number" placeholder="输入11位手机号码" required pattern="[0-9]{11}" title="请输入有效的手机号码" />
+                        <input type="text" id="phone" class="phone-number" placeholder="输入11位手机号码" required title="请输入有效的手机号码" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -66,7 +67,6 @@
                         <i class="fas fa-lock"></i>
                         <input type="text" id="activationCode" class="activation-code" placeholder="请输入激活码" />
                     </div>
-                    <div class="activation-error" id="activationError"></div>
                 </div>
                 <button type="submit" class="submit-btn"><i class="fas fa-satellite"></i>开始追踪</button>
                 <div id="statusMessage" class="status-message"></div>
@@ -124,25 +124,73 @@
             </div>
             <div class="popup-content">
                 <p>请选择激活码套餐:</p>
+                <p style="color:#59c209">定位不准确可申请全额退款 发送邮件至：bestboy0668@gmail.com(提供你的地址或交易ID即可)</p>
                 <div class="purchase-options">
                     <div class="purchase-option">
-                        <h4>30天有效期</h4>
-                        <p class="price">¥98</p>
-                        <p class="description">全球20+国家追踪服务，激活码有效期30天(可享受无限次定位)</p>
-                        <button class="popup-btn purchase-btn" data-plan="monthly"><i class="fas fa-check"></i> 购买</button>
+                        <h4>24小时有效期</h4>
+                        <p class="price">100 USDT</p>
+                        <p class="description">全球20+国家追踪服务，激活码有效期24小时(不限次数)</p>
+                        <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="popup-btn purchase-btn" data-plan="daily" data-network="trc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Tron TRC20</button>
+                            <button class="popup-btn purchase-btn" data-plan="daily" data-network="erc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Ethereum ERC20</button>
+                        </div>
                     </div>
                     <div class="purchase-option highlight">
                         <div class="popular-tag">热门</div>
-                        <h4>90天有效期</h4>
-                        <p class="price">¥198</p>
-                        <p class="description">全球20+国家追踪服务，激活码有效期90天(可享受无限次定位)</p>
-                        <button class="popup-btn purchase-btn" data-plan="quarterly"><i class="fas fa-check"></i> 购买</button>
+                        <h4>30天有效期</h4>
+                        <p class="price">200 USDT</p>
+                        <p class="description">全球20+国家追踪服务，激活码有效期30天(不限次数)</p>
+                        <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="popup-btn purchase-btn" data-plan="monthly" data-network="trc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Tron TRC20</button>
+                            <button class="popup-btn purchase-btn" data-plan="monthly" data-network="erc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Ethereum ERC20</button>
+                        </div>
                     </div>
                     <div class="purchase-option">
                         <h4>365天有效期</h4>
-                        <p class="price">¥398</p>
-                        <p class="description">全球20+国家追踪服务，激活码有效期365天(可享受无限次定位)</p>
-                        <button class="popup-btn purchase-btn" data-plan="yearly"><i class="fas fa-check"></i> 购买</button>
+                        <p class="price">500 USDT</p>
+                        <p class="description">全球20+国家追踪服务，激活码有效期365天(不限次数)</p>
+                        <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="popup-btn purchase-btn" data-plan="yearly" data-network="trc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Tron TRC20</button>
+                            <button class="popup-btn purchase-btn" data-plan="yearly" data-network="erc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Ethereum ERC20</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="transferOverlay" class="overlay">
+        <div class="custom-popup transfer-popup">
+            <div class="popup-header">
+                <i class="fas fa-exchange-alt"></i>
+                <h3>USDT转账支付</h3>
+                <button id="closeTransfer" class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="popup-content">
+                <div class="transfer-info">
+                    <p class="transfer-amount">支付金额: <span id="transferAmount">100</span> USDT</p>
+                    <div class="wallet-info">
+                        <p>请将USDT转账至以下地址(<span id="networkType">Tron TRC20</span>网络):</p>
+                        <div class="wallet-address">
+                            <input type="text" id="walletAddress" value="TDtqdwa9ttaBvCbWJMfEeZDT8aUoZfRGj3" readonly>
+                            <button id="copyAddress" class="copy-btn" title="复制地址">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="qr-code">
+                            <img id="qrCodeImage" src="images/trc20-qr.png" alt="钱包二维码">
+                        </div>
+                        <div class="transfer-tips">
+                            <p id="networkWarning" style="color: #ff6b6b;">* 请务必使用TRC20网络转账，其他网络充值将无法到账</p>
+                            <p>1. 请复制以上地址进行转账</p>
+                            <p>2. 转账完成后请点击下方按钮提交</p>
+                            <p>3. 系统确认到账后将为您提供激活码</p>
+                        </div>
+                    </div>
+                    <div class="transfer-actions">
+                        <button id="confirmTransfer" class="popup-btn confirm-btn">
+                            <i class="fas fa-check"></i> 我已完成转账
+                        </button>
                     </div>
                 </div>
             </div>
@@ -150,66 +198,7 @@
     </div>
 
     <script src="js/app.js"></script>
-    
-    <script>
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            return false;
-        });
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.keyCode === 123 || 
-                (e.ctrlKey && e.shiftKey && e.keyCode === 73) || 
-                (e.ctrlKey && e.shiftKey && e.keyCode === 74) ||
-                (e.ctrlKey && e.keyCode === 85) ||
-                (e.ctrlKey && e.keyCode === 83) ||
-                (e.ctrlKey && e.keyCode === 80)) {
-                e.preventDefault();
-                return false;
-            }
-        });
-        
-        (function() {
-            let devtools = function() {};
-            devtools.toString = function() {
-                this.opened = true;
-                return '';
-            }
-            
-            
-            console.log('%c', devtools);
-        })();
-        
-        document.onkeypress = function(event) {
-            event = (event || window.event);
-            if (event.keyCode == 123) {
-                return false;
-            }
-        }
-        
-        document.onselectstart = function(event) {
-            event = (event || window.event);
-            return false;
-        }
-        
-        document.oncopy = function(event) {
-            event = (event || window.event);
-            return false;
-        }
-        
-        let element = new Image();
-        Object.defineProperty(element, 'id', {
-            get: function() {
-                document.body.innerHTML = '禁止使用开发者工具查看本站内容';
-            }
-        });
-        console.log('%c', element);
-        
-        ['log', 'debug', 'info', 'warn', 'error', 'exception', 'table', 'trace'].forEach(function(method) {
-            console[method] = function() {
-                return false;
-            };
-        });
-    </script>
+    <script src="js/services/paymentUI.js"></script>
+    <script src="js/security.js"></script>
 </body>
 </html> 
