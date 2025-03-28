@@ -787,4 +787,93 @@
     .copy-hint {
         color: #888;
     }
+}
+
+/* 转账弹窗样式 */
+.transfer-popup {
+    max-width: 500px;
+}
+
+.transfer-info {
+    padding: 20px;
+}
+
+.transfer-amount {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #4a6fa5;
+}
+
+.wallet-info {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.wallet-address {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.wallet-address input {
+    flex: 1;
+    border: none;
+    padding: 5px;
+    font-family: monospace;
+    font-size: 14px;
+    background: transparent;
+}
+
+.wallet-address .copy-btn {
+    background: none;
+    border: none;
+    color: #4a6fa5;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+}
+
+.wallet-address .copy-btn:hover {
+    color: #2c4162;
+}
+
+.wallet-address .copy-btn.copied {
+    color: #28a745;
+}
+
+.qr-code {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.qr-code img {
+    max-width: 200px;
+    height: auto;
+}
+
+.transfer-tips {
+    margin-top: 20px;
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+.transfer-tips p {
+    margin: 5px 0;
+}
+
+.transfer-actions {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.transfer-actions .confirm-btn {
+    width: 100%;
+    max-width: 300px;
 } 
