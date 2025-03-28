@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="星链Starlink手机号码定位服务，提供全球范围内的手机号码精准定位">
+    <meta name="theme-color" content="#4a6fa5">
+    <title>星链Starlink - 手机号码定位器</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/payment.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/brands.min.css" crossorigin="anonymous">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-location-dot"></i>星链Starlink - 手机号码定位器</h1>
+        <div class="header-description">
+            <span><i class="fas fa-globe"></i> 全球20+国家定位</span>
+            <span><i class="fas fa-satellite"></i> 星链Starlink技术</span>
+            <span><i class="fas fa-bullseye"></i> 100%精准度(来自谷歌地图)</span>
+            <span><i class="fas fa-mobile-alt"></i> 只需要手机号码即可</span>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="sidebar">
+            <div class="form-title"><i class="fas fa-satellite-dish"></i>开始精准定位</div>
+            <form id="phoneForm">
+                <div class="form-group">
+                    <label for="country"><i class="fas fa-globe"></i> 选择国家/地区</label>
+                    <select id="country" class="country-code">
+                        <option value="+86" selected>中国 +86</option>
+                        <option value="+1">美国 +1</option>
+                        <option value="+44">英国 +44</option>
+                        <option value="+81">日本 +81</option>
+                        <option value="+82">韩国 +82</option>
+                        <option value="+61">澳大利亚 +61</option>
+                        <option value="+49">德国 +49</option>
+                        <option value="+33">法国 +33</option>
+                        <option value="+39">意大利 +39</option>
+                        <option value="+7">俄罗斯 +7</option>
+                        <option value="+65">新加坡 +65</option>
+                        <option value="+91">印度 +91</option>
+                        <option value="+55">巴西 +55</option>
+                        <option value="+52">墨西哥 +52</option>
+                        <option value="+966">沙特阿拉伯 +966</option>
+                        <option value="+971">阿联酋 +971</option>
+                        <option value="+90">土耳其 +90</option>
+                        <option value="+234">尼日利亚 +234</option>
+                        <option value="+27">南非 +27</option>
+                        <option value="+20">埃及 +20</option>
+                        <option value="+31">荷兰 +31</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="phone"><i class="fas fa-mobile-alt"></i> 手机号码</label>
+                    <div class="phone-input">
+                        <i class="fas fa-phone"></i>
+                        <input type="text" id="phone" class="phone-number" placeholder="输入11位手机号码" required title="请输入有效的手机号码" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="activationCode"><i class="fas fa-key"></i> 激活码</label>
+                    <div class="activation-input">
+                        <i class="fas fa-lock"></i>
+                        <input type="text" id="activationCode" class="activation-code" placeholder="请输入激活码" />
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn"><i class="fas fa-satellite"></i>开始追踪</button>
+                <div id="statusMessage" class="status-message"></div>
+            </form>
+        </div>
+        <div class="map-container">
+            <div class="map-frame">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d59233174.43603217!2d95.67269557536404!3d28.38363882744979!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1679831920096!5m2!1sen!2sus"
+                    width="100%"
+                    height="100%"
+                    frameborder="0"
+                    scrolling="no"
+                    allowfullscreen=""
+                    loading="lazy"
+                    sandbox="allow-scripts allow-same-origin allow-popups"
+                    title="Google Maps">
+                </iframe>
+                <div class="map-overlay"></div>
+                <div id="locationMarker" class="location-marker"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="overlay" class="overlay">
+        <div class="custom-popup">
+            <div class="popup-header">
+                <i class="fas fa-exclamation-circle"></i>
+                <h3>需要激活码</h3>
+                <button id="closePopup" class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="popup-content">
+                <p>需要输入正确的激活码才能继续定位!</p>
+                <div class="activation-input popup-input">
+                    <i class="fas fa-key"></i>
+                    <input type="text" id="popupActivationCode" placeholder="请输入正确的激活码" />
+                </div>
+                <div class="btn-container">
+                    <div class="main-buttons">
+                        <button id="confirmActivation" class="popup-btn confirm-btn"><i class="fas fa-check"></i> 确认</button>
+                        <button id="cancelActivation" class="popup-btn cancel-btn"><i class="fas fa-times"></i> 取消</button>
+                    </div>
+                    <button id="buyActivation" class="popup-btn buy-btn"><i class="fas fa-shopping-cart"></i> 购买激活码</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="purchaseOverlay" class="overlay">
+        <div class="custom-popup purchase-popup">
+            <div class="popup-header">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>购买激活码</h3>
+                <button id="closePurchase" class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="popup-content">
+                <p>请选择激活码套餐:</p>
+                <p style="color:#59c209">定位不准确可申请全额退款 发送邮件至：bestboy0668@gmail.com(提供你的地址或交易ID即可)</p>
+                <div class="purchase-options">
+                    <div class="purchase-option">
+                        <h4>24小时有效期</h4>
+                        <p class="price">100 USDT</p>
+                        <p class="description">全球20+国家追踪服务，激活码有效期24小时(不限次数)</p>
+                        <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="popup-btn purchase-btn" data-plan="daily" data-network="trc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Tron TRC20</button>
+                            <button class="popup-btn purchase-btn" data-plan="daily" data-network="erc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Ethereum ERC20</button>
+                        </div>
+                    </div>
+                    <div class="purchase-option highlight">
+                        <div class="popular-tag">热门</div>
+                        <h4>30天有效期</h4>
+                        <p class="price">200 USDT</p>
+                        <p class="description">全球20+国家追踪服务，激活码有效期30天(不限次数)</p>
+                        <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="popup-btn purchase-btn" data-plan="monthly" data-network="trc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Tron TRC20</button>
+                            <button class="popup-btn purchase-btn" data-plan="monthly" data-network="erc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Ethereum ERC20</button>
+                        </div>
+                    </div>
+                    <div class="purchase-option">
+                        <h4>365天有效期</h4>
+                        <p class="price">500 USDT</p>
+                        <p class="description">全球20+国家追踪服务，激活码有效期365天(不限次数)</p>
+                        <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="popup-btn purchase-btn" data-plan="yearly" data-network="trc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Tron TRC20</button>
+                            <button class="popup-btn purchase-btn" data-plan="yearly" data-network="erc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Ethereum ERC20</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="transferOverlay" class="overlay">
+        <div class="custom-popup transfer-popup">
+            <div class="popup-header">
+                <i class="fas fa-exchange-alt"></i>
+                <h3>USDT转账支付</h3>
+                <button id="closeTransfer" class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="popup-content">
+                <div class="transfer-info">
+                    <p class="transfer-amount">支付金额: <span id="transferAmount">100</span> USDT</p>
+                    <div class="wallet-info">
+                        <p>请将USDT转账至以下地址(<span id="networkType">Tron TRC20</span>网络):</p>
+                        <div class="wallet-address">
+                            <input type="text" id="walletAddress" value="TDtqdwa9ttaBvCbWJMfEeZDT8aUoZfRGj3" readonly>
+                            <button id="copyAddress" class="copy-btn" title="复制地址">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                        <div class="qr-code">
+                            <img id="qrCodeImage" src="images/trc20-qr.png" alt="钱包二维码">
+                        </div>
+                        <div class="transfer-tips">
+                            <p id="networkWarning" style="color: #ff6b6b;">* 请务必使用TRC20网络转账，其他网络充值将无法到账</p>
+                            <p>1. 请复制以上地址进行转账</p>
+                            <p>2. 转账完成后请点击下方按钮提交</p>
+                            <p>3. 系统确认到账后将为您提供激活码</p>
+                        </div>
+                    </div>
+                    <div class="transfer-actions">
+                        <button id="confirmTransfer" class="popup-btn confirm-btn">
+                            <i class="fas fa-check"></i> 我已完成转账
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/services/paymentUI.js"></script>
+    <script src="js/security.js"></script>
+</body>
+</html> 
