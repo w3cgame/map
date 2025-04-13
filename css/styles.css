@@ -534,6 +534,21 @@ input.valid-input {
         align-items: center;
         margin: 5px auto 10px;
     }
+    
+    .qr-popup {
+        width: 90%;
+    }
+    
+    .qr-code-img {
+        max-width: 200px;
+    }
+    
+    .toast-message {
+        width: 90%;
+        text-align: center;
+        justify-content: center;
+        font-size: 0.9em;
+    }
 }
 
 /* 弹窗与遮罩层样式 */
@@ -906,6 +921,15 @@ input.valid-input {
     .purchase-option .description {
         color: #bdc3c7;
     }
+    
+    .qr-code-img {
+        border-color: #333;
+        background-color: white; /* 保持二维码背景为白色，以确保可扫描性 */
+    }
+    
+    .qr-description strong {
+        color: #6d93c0;
+    }
 }
 
 /* 移动设备特定样式 */
@@ -1007,4 +1031,99 @@ input.valid-input {
     .submit-btn:hover {
         transform: none !important;
     }
+}
+
+/* 支付二维码弹窗样式 */
+.qr-popup {
+    max-width: 400px;
+}
+
+.qr-code-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.qr-code-img {
+    max-width: 250px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.qr-description {
+    text-align: center;
+    margin: 15px 0 5px;
+    font-size: 1.1em;
+}
+
+.qr-description strong {
+    color: #4a6da7;
+}
+
+.qr-instruction {
+    text-align: center;
+    margin: 5px 0 20px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.qr-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.qr-buttons button {
+    padding: 12px 20px;
+}
+
+/* 暗色模式调整 */
+@media (prefers-color-scheme: dark) {
+    .qr-code-img {
+        border-color: #333;
+        background-color: white; /* 保持二维码背景为白色，以确保可扫描性 */
+    }
+    
+    .qr-description strong {
+        color: #6d93c0;
+    }
+}
+
+/* Toast 消息样式 */
+.toast-message {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-size: 1em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    animation: slideUp 0.3s ease forwards;
+}
+
+.toast-message i {
+    color: #4CAF50;
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.toast-message.fade-out {
+    animation: fadeOut 0.5s ease forwards;
+}
+
+@keyframes slideUp {
+    from { transform: translate(-50%, 100px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
 } 
