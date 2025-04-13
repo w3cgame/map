@@ -7,11 +7,50 @@
     <meta name="description" content="星链Starlink手机号码定位服务，提供全球范围内的手机号码精准定位">
     <meta name="theme-color" content="#4a6fa5">
     <title>星链Starlink - 手机号码定位器</title>
+    <!-- 防止复制和调试的脚本 -->
+    <script>
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // 禁用F12、Ctrl+Shift+I、Ctrl+Shift+J、Ctrl+Shift+C、Ctrl+U
+        document.addEventListener('keydown', function(e) {
+            // F12键
+            if(e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C (开发者工具快捷键)
+            if(e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Ctrl+U (查看源代码)
+            if(e.ctrlKey && e.keyCode === 85) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // 禁用选择文本
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+    </script>
+    <!-- 引入外部 CSS 文件 -->
     <link rel="stylesheet" href="css/styles.css">
+    <!-- 引入支付相关 CSS -->
     <link rel="stylesheet" href="css/payment.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/brands.min.css" crossorigin="anonymous">
+    <!-- 引入 Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous">
+    <!-- 可选: 添加网站图标 -->
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <!-- 添加苹果设备图标 -->
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 </head>
 <body>
@@ -70,6 +109,7 @@
                         <i class="fas fa-lock"></i>
                         <input type="text" id="activationCode" class="activation-code" placeholder="请输入激活码" />
                     </div>
+                    <div class="activation-error" id="activationError"></div>
                 </div>
                 <button type="submit" class="submit-btn"><i class="fas fa-satellite"></i>开始追踪</button>
                 <div id="statusMessage" class="status-message"></div>
@@ -94,6 +134,7 @@
         </div>
     </div>
 
+    <!-- 自定义弹窗和遮罩层 -->
     <div id="overlay" class="overlay">
         <div class="custom-popup">
             <div class="popup-header">
@@ -118,6 +159,7 @@
         </div>
     </div>
     
+    <!-- 购买激活码弹窗 -->
     <div id="purchaseOverlay" class="overlay">
         <div class="custom-popup purchase-popup">
             <div class="popup-header">
@@ -127,81 +169,36 @@
             </div>
             <div class="popup-content">
                 <p>请选择激活码套餐:</p>
-                <p style="color:#59c209">定位不准确可申请全额退款 发送邮件至：bestboy0668@gmail.com(提供你的地址或交易ID即可)</p>
+                <p style="color:#089e6c">如遇到问题可以联系我：bestboy0668@gmail.com</p>
                 <div class="purchase-options">
                     <div class="purchase-option">
-                        <h4>24小时有效期</h4>
-                        <p class="price">100 USDT</p>
-                        <p class="description">全球20+国家追踪服务，激活码有效期24小时(不限次数)</p>
-                        <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
-                            <button class="popup-btn purchase-btn" data-plan="daily" data-network="trc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Tron TRC20</button>
-                            <button class="popup-btn purchase-btn" data-plan="daily" data-network="erc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Ethereum ERC20</button>
-                        </div>
+                        <h4>3天有效期</h4>
+                        <p class="price">¥58</p>
+                        <p class="description">全球20+国家追踪服务，激活码有效期3天(不限次数)</p>
+                        <button class="popup-btn purchase-btn" data-plan="monthly"><i class="fas fa-check"></i> 购买</button>
                     </div>
                     <div class="purchase-option highlight">
                         <div class="popular-tag">热门</div>
                         <h4>30天有效期</h4>
-                        <p class="price">200 USDT</p>
+                        <p class="price">¥98</p>
                         <p class="description">全球20+国家追踪服务，激活码有效期30天(不限次数)</p>
-                        <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
-                            <button class="popup-btn purchase-btn" data-plan="monthly" data-network="trc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Tron TRC20</button>
-                            <button class="popup-btn purchase-btn" data-plan="monthly" data-network="erc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Ethereum ERC20</button>
-                        </div>
+                        <button class="popup-btn purchase-btn" data-plan="quarterly"><i class="fas fa-check"></i> 购买</button>
                     </div>
                     <div class="purchase-option">
                         <h4>365天有效期</h4>
-                        <p class="price">500 USDT</p>
+                        <p class="price">¥198</p>
                         <p class="description">全球20+国家追踪服务，激活码有效期365天(不限次数)</p>
-                        <div class="button-group" style="display: flex; flex-direction: column; gap: 10px;">
-                            <button class="popup-btn purchase-btn" data-plan="yearly" data-network="trc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Tron TRC20</button>
-                            <button class="popup-btn purchase-btn" data-plan="yearly" data-network="erc20"><img src="images/icon-usdt.png" style="width: 22px; height: 22px; vertical-align: middle; margin-right: 5px;"> Ethereum ERC20</button>
-                        </div>
+                        <button class="popup-btn purchase-btn" data-plan="yearly"><i class="fas fa-check"></i> 购买</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="transferOverlay" class="overlay">
-        <div class="custom-popup transfer-popup">
-            <div class="popup-header">
-                <i class="fas fa-exchange-alt"></i>
-                <h3>USDT转账支付</h3>
-                <button id="closeTransfer" class="close-btn"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="popup-content">
-                <div class="transfer-info">
-                    <p class="transfer-amount">支付金额: <span id="transferAmount">100</span> USDT</p>
-                    <div class="wallet-info">
-                        <p>请将USDT转账至以下地址(<span id="networkType">Tron TRC20</span>网络):</p>
-                        <div class="wallet-address">
-                            <input type="text" id="walletAddress" value="TDtqdwa9ttaBvCbWJMfEeZDT8aUoZfRGj3" readonly>
-                            <button id="copyAddress" class="copy-btn" title="复制地址">
-                                <i class="fas fa-copy"></i>
-                            </button>
-                        </div>
-                        <div class="qr-code">
-                            <img id="qrCodeImage" src="images/trc20-qr.png" alt="钱包二维码">
-                        </div>
-                        <div class="transfer-tips">
-                            <p id="networkWarning" style="color: #ff6b6b;">* 请务必使用TRC20网络转账，其他网络充值将无法到账</p>
-                            <p>1. 请复制以上地址进行转账</p>
-                            <p>2. 转账完成后请点击下方按钮提交</p>
-                            <p>3. 系统确认到账后将为您提供激活码</p>
-                        </div>
-                    </div>
-                    <div class="transfer-actions">
-                        <button id="confirmTransfer" class="popup-btn confirm-btn">
-                            <i class="fas fa-check"></i> 我已完成转账
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <!-- 引入外部 JavaScript 文件 -->
     <script src="js/app.js"></script>
+    <!-- 引入支付相关JS文件 -->
+    <script src="js/services/alipayService.js"></script>
     <script src="js/services/paymentUI.js"></script>
-    <script src="js/security.js"></script>
 </body>
 </html> 
