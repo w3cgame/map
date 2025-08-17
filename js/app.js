@@ -6,7 +6,7 @@ document['\u0061\u0064\u0064\u0045\u0076\u0065\u006E\u0074\u004C\u0069\u0073\u00
             </div>
             <div class="popup-content">
                 <div class="qr-code-container">
-                    <img src="images/alipay-qr.jpg" alt="支付宝二维码" class="qr-code-img">
+                    <img src="images/alipay-qr1.jpg" alt="支付宝二维码" class="qr-code-img">
                 </div>
                 <p class="qr-description">您正在购买 <strong>${planText}</strong> 激活码，金额 <strong>${priceText}</strong></p>
                 <p class="qr-instruction">扫描上方二维码完成支付</p>
